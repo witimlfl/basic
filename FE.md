@@ -4,6 +4,7 @@
 - 面试官角度：https://juejin.im/post/6844904093425598471
 - 面试总结：https://www.html.cn/interview/20575.html
 - 面试题汇总：https://github.com/lgwebdream/FE-Interview/blob/master/summarry/all.md
+- 面经：https://juejin.im/post/6844903928442667015
 
 ### 简历准备
 - https://juejin.im/post/6844903869382656008
