@@ -1,3 +1,7 @@
+/* *
+ * 
+ * 
+ */
 const mySetInterVal1 = (fn, a, b) => {
     let timeObj = { id: null }
 
