@@ -227,29 +227,28 @@ Promise._race = (promises) => {
 //     new Promise((resolve, reject) => { resolve(3)}),
 // ])
 
-const mockRace = Promise._race([
-    new Promise((resolve, reject) => { 
-        setTimeout(() => {
-            resolve(1)
-        }, 500)
+// const mockRace = Promise._race([
+//     new Promise((resolve, reject) => { 
+//         setTimeout(() => {
+//             resolve(1)
+//         }, 500)
        
-    }),
-    new Promise((resolve, reject) => { 
-        setTimeout(() => {
-            reject(2)
-        }, 100)
+//     }),
+//     new Promise((resolve, reject) => { 
+//         setTimeout(() => {
+//             reject(2)
+//         }, 100)
        
-    }),
-    new Promise((resolve, reject) => { 
-        setTimeout(() => {
-            resolve(3)
-        }, 200)
-    }),
-])
+//     }),
+//     new Promise((resolve, reject) => { 
+//         setTimeout(() => {
+//             resolve(3)
+//         }, 200)
+//     }),
+// ])
 
-mockRace.then(data => {
-    console.log('mock any--->', data)
-}, err => {
-    console.log('mock error -->', err)
-})
-
+// mockRace.then(data => {
+//     console.log('mock any--->', data)
+// }, err => {
+//     console.log('mock error -->', err)
+// })
