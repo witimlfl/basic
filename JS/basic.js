@@ -13,7 +13,6 @@ function throttle(fn, delay = 500) { // 时间戳
             prev = now;
         }
     }
-
 }
 
 function newThrottle(fn, delay) { // 定时器
@@ -61,3 +60,44 @@ function newDebounce(fn, delay) {
         }, delay)
     }
 }
+
+// 2.柯里化 add(a,b,c) => add(fn, a)(b)(c)
+function currying(fn, ...args) {
+    const count = fn.length
+    return function() {
+        const arg = [...args, ...arguments]
+        if(arg.length < count) {
+            return currying.call(this, fn, ...arg)
+        }else {
+            return fn.call(this, ...arg)
+        }
+    }
+}
+
+function add(a,b,c) {
+    return a+b+c
+}
+
+// console.log('--->', currying(add)(1)(2)(3))
+
+//add(1)(2, 3)(4)() = 10  未接收到新的参数，直接输出
+function newCurry(fn, ...args) {
+    let curArgs = args || []
+    return function next() {
+        if(arguments.length > 0) {
+            curArgs = [...curArgs, ...arguments]
+            return next
+        } else {
+            return fn.apply(null, curArgs)
+        }
+    }
+}
+var newAdd = function(){
+    var sum = 0;
+    for(var i = 0; i < arguments.length; i++){
+        sum += arguments[i];
+    }
+    return sum;
+}
+
+console.log('3--->', newCurry(newAdd)(1)(2,4)(4)())
