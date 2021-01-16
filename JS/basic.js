@@ -1,3 +1,4 @@
+
 // 1.防抖 + 节流
 
 // 节流：多长时间段里无论有多少次触发，只执行一次，使用场景：搜索，搜索数据渲染
@@ -100,4 +101,155 @@ var newAdd = function(){
     return sum;
 }
 
-console.log('3--->', newCurry(newAdd)(1)(2,4)(4)())
+// console.log('3--->', newCurry(newAdd)(1)(2,4)(4)())
+
+//3. promise
+// 手写promise.all
+
+Promise.all = (promises) => {
+    let length = promises.length
+
+    if(!length) {
+        return Error('promises must is an array!')
+    }
+    return new Promise((resolve, reject) => {
+        if(!length) {
+            return resolve([])
+        }
+
+        let result = [];
+        let hasOneReject = false
+      
+        for(let index in promises) {
+            promises[index].then((res) => {
+                if(hasOneReject) {
+                    return;
+                }
+                result.push(res)
+                length --;
+                length || resolve(result)
+
+            }, err => {
+                if(hasOneReject) {
+                    return;
+                }
+                hasOneReject = true
+                reject(err+'')
+                return
+            })
+        }
+    })
+}
+
+Promise.any = (promises) => {
+    if(!promises) {
+        Error('arguments must is an array')
+    }
+    return new Promise((resolve, reject) => {
+        let result = []
+        let length = promises.length
+
+        if(!length) {
+            resolve(result)
+        }
+        let hasOneResolve = false
+
+        for(let index in promises) {
+            promises[index].then(res =>{
+                if(hasOneResolve) return
+                hasOneResolve = true
+                resolve(res+'aa')
+                return
+            }, err => {
+                if(hasOneResolve) return
+                result.push(err)
+                length --
+                length || reject(result)
+            })
+        }
+
+
+    })
+
+}
+
+Promise._all = function (promises) {
+    promises = Array.from(promises);//将可迭代对象转换为数组
+    return new Promise((resolve, reject) => {
+        let index = 0;
+        let result = [];
+        if (promises.length === 0) {
+            resolve(result);
+        } else {
+            function processValue(i, data) {
+                result[i] = data;
+                if (++index === promises.length) {
+                    resolve(result);
+                }
+            }
+            for (let i = 0; i < promises.length; i++) {
+                  //promises[i] 可能是普通值
+                  Promise.resolve(promises[i]).then((data) => {
+                    processValue(i, data);
+                }, (err) => {
+                    reject(err);
+                    return;
+                });
+            }
+        }
+    });
+}
+
+
+Promise._race = (promises) => {
+    if(!promises) {
+        Error('arguments must is an array')
+    }
+    return new Promise((resolve, reject) => {
+        if(!promises.length) {
+           return
+        }
+        promises.forEach(element => {
+            element.then(res => resolve(res), err => reject(err))
+        });
+    })
+}
+
+// const mock = Promise.all([
+//     new Promise((resolve, reject) => { resolve(1)}),
+//     new Promise((resolve, reject) => { reject(23)}),
+//     new Promise((resolve, reject) => { resolve(3)}),
+// ])
+
+// const mockAny = Promise.any([
+//     new Promise((resolve, reject) => { resolve(1)}),
+//     new Promise((resolve, reject) => { reject(2)}),
+//     new Promise((resolve, reject) => { resolve(3)}),
+// ])
+
+const mockRace = Promise._race([
+    new Promise((resolve, reject) => { 
+        setTimeout(() => {
+            resolve(1)
+        }, 500)
+       
+    }),
+    new Promise((resolve, reject) => { 
+        setTimeout(() => {
+            reject(2)
+        }, 100)
+       
+    }),
+    new Promise((resolve, reject) => { 
+        setTimeout(() => {
+            resolve(3)
+        }, 200)
+    }),
+])
+
+mockRace.then(data => {
+    console.log('mock any--->', data)
+}, err => {
+    console.log('mock error -->', err)
+})
+
